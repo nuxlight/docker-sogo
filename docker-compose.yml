@@ -1,0 +1,10 @@
+version: '3.8'
+
+services: 
+  sogo:
+    build: .
+    container_name: sogo
+    environment: 
+      - TEST_DRAFT=testloule
+    ports: 
+      - "20000:20000"

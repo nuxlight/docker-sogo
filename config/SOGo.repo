@@ -1,0 +1,4 @@
+[sogo]
+name=SOGo Repository
+baseurl=https://packages.inverse.ca/SOGo/nightly/5/rhel/8/$basearch
+gpgcheck=1
