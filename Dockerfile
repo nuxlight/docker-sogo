@@ -1,10 +1,25 @@
-FROM registry.access.redhat.com/ubi8/ubi
+FROM oraclelinux:8
+
+# S6 Apply
+ADD https://github.com/just-containers/s6-overlay/releases/download/v2.2.0.1/s6-overlay-amd64-installer /tmp/
+RUN chmod +x /tmp/s6-overlay-amd64-installer && /tmp/s6-overlay-amd64-installer /
 
 # Enable EPEL
-RUN yum install -y --disableplugin=subscription-manager https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+RUN dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
 
 # Install SoGo
-#RUN rpm --import 'http://pgp.mit.edu/pks/lookup?op=get&search=0xCB2D3A2AA0030E2C'
-RUN tee /etc/yum.repos.d/SOGo.repo <<EOF [sogo] name=SOGo Repository baseurl=https://packages.inverse.ca/SOGo/nightly/5/rhel/8/\$basearch gpgcheck=1 EOF
-RUN yum install -y --disableplugin=subscription-manager sogo
+ADD config/SOGo.repo /etc/yum.repos.d/SOGo.repo 
+RUN dnf install -y sogo --nogpgcheck
 
+# Install temlater for config file
+RUN curl -L https://raw.githubusercontent.com/johanhaleby/bash-templater/master/templater.sh -o /usr/local/bin/templater
+RUN chmod +x /usr/local/bin/templater
+
+# Add SoGo config
+ADD config/sogo.conf /etc/sogo/sogo.conf
+
+ADD root /
+
+EXPOSE 20000
+
+ENTRYPOINT ["/init"]
