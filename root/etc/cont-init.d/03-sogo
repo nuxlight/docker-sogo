@@ -1,3 +1,5 @@
-#!/usr/bin/execlineb -P
-
-cat /etc/sogo/sogo.conf
+#!/usr/bin/with-contenv sh
+echo "Starting nginx...."
+nginx
+echo "Starting sogod...."
+su -s /bin/bash -c '/usr/sbin/sogod -WOWorkersCount 5 -WOPidFile /var/run/sogo/sogo.pid -WOPort 0.0.0.0:20000 -WOLogFile -' sogo

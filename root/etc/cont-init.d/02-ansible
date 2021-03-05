@@ -1,0 +1,3 @@
+#!/usr/bin/with-contenv sh
+
+ansible-playbook /ansible/tempalte-playbook.yml

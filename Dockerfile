@@ -9,13 +9,15 @@ RUN dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.n
 
 # Install SoGo
 ADD config/SOGo.repo /etc/yum.repos.d/SOGo.repo 
-RUN dnf install -y sogo ansible --nogpgcheck
+RUN dnf install -y sogo ansible sope49-gdl1-postgresql nginx --nogpgcheck
 
 # Add SoGo config template
 ADD config/sogo.conf.j2 /etc/sogo/sogo.conf.j2
+# Add Nginx config template
+ADD config/nginx.conf.j2 /etc/nginx/nginx.conf.j2
 
 ADD root /
 
-EXPOSE 20000
+EXPOSE 80
 
 ENTRYPOINT ["/init"]

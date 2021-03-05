@@ -1,10 +1,44 @@
 version: '3.8'
 
 services: 
+
+  db:
+    image: postgres:alpine
+    restart: always
+    environment:
+      POSTGRES_USER: sogo
+      POSTGRES_PASSWORD: sogo
+      POSTGRES_DB: sogo
+    networks:
+      - "bender_net"
+
   sogo:
     build: .
     container_name: sogo
     environment: 
-      - TEST_DRAFT=testloule
-    ports: 
-      - "20000:20000"
+      SOGO_POSTGRES_HOST: db
+      SOGO_LDAP_HOST: openldap
+      SOGO_LDAP_BASE_DN: ou=people,dc=acme,dc=com
+      SOGO_LDAP_BIND_DN: uid=admin,ou=people,dc=acme,dc=com
+      SOGO_LDAP_PASSWORD: password
+      SOGO_HOSTNAME: acme.com
+    expose: 
+      - "80"
+    depends_on:
+      - db
+    networks:
+      - "bender_net"
+    labels: 
+      - "traefik.enable=true" 
+      - "traefik.http.middlewares.redirect-tls.redirectscheme.scheme=https"
+      - "traefik.http.routers.sogo.rule=Host(`mail.acme.com`)"
+      - "traefik.http.routers.sogo.entrypoints=web"
+      - "traefik.http.routers.sogo.middlewares=redirect-tls"
+      - "traefik.http.routers.sogo-secured.rule=Host(`mail.acme.com`)"
+      - "traefik.http.routers.sogo-secured.entrypoints=websecure"
+      - "traefik.http.routers.sogo-secured.tls.certresolver=mytlschallenge"
+      - "traefik.http.services.sogo-secured.loadbalancer.server.port=80"
+      
+networks: 
+  bender_net:
+    external: true
