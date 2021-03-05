@@ -11,6 +11,7 @@
     SOGoTimeZone = {{ lookup('env', 'SOGO_TIMEZONE') | default('Europe/Paris', true) }};
     SOGoMailDomain = {{ lookup('env', 'SOGO_MAIL_DOMAIN') | default('acme.com', true) }};
     SOGoIMAPServer = {{ lookup('env', 'SOGO_IMAP_HOST') | default('127.0.0.1', true) }};
+    SOGoMemcachedHost = {{ lookup('env', 'SOGO_MEMCACHED_HOST') | default('127.0.0.1', true) }};
     SOGoDraftsFolderName = Drafts;
     SOGoSentFolderName = Sent;
     SOGoTrashFolderName = Trash;

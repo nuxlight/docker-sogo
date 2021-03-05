@@ -2,4 +2,4 @@
 echo "Starting nginx...."
 nginx
 echo "Starting sogod...."
-su -s /bin/bash -c '/usr/sbin/sogod -WOWorkersCount 5 -WOPidFile /var/run/sogo/sogo.pid -WOPort 0.0.0.0:20000 -WOLogFile -' sogo
+su -s /bin/bash -c '/usr/sbin/sogod -WOWorkersCount 15 -WOPidFile /var/run/sogo/sogo.pid -WOPort 0.0.0.0:20000 -WOLogFile -' sogo

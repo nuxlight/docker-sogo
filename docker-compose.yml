@@ -12,12 +12,20 @@ services:
     networks:
       - "bender_net"
 
+  sogo_memcached:
+    image: memcached:latest
+    container_name: sogo-memcached
+    entrypoint: memcached -m 512
+    networks:
+      - "bender_net"
+
   sogo:
     build: .
     container_name: sogo
     environment: 
       SOGO_POSTGRES_HOST: db
       SOGO_LDAP_HOST: openldap
+      SOGO_MEMCACHED_HOST: sogo_memcached
       SOGO_LDAP_BASE_DN: ou=people,dc=acme,dc=com
       SOGO_LDAP_BIND_DN: uid=admin,ou=people,dc=acme,dc=com
       SOGO_LDAP_PASSWORD: password
@@ -26,6 +34,7 @@ services:
       - "80"
     depends_on:
       - db
+      - sogo_memcached
     networks:
       - "bender_net"
     labels: 
