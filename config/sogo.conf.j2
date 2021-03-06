@@ -18,12 +18,14 @@
     SOGoJunkFolderName = Junk;
     SOGoMailingMechanism = smtp;
     SOGoSMTPServer = "smtp://{{ lookup('env', 'SOGO_SMTP_HOST') | default('127.0.0.1', true) }}";
+    //SOGoUIAdditionalJSFiles = (js/theme.js);
     SOGoUserSources = (
       {
         type = ldap;
         CNFieldName = cn;
         IDFieldName = uid;
         UIDFieldName = uid;
+        bindFields = (mail);
         //IMAPHostFieldName = mailHost;
         baseDN = "{{ lookup('env', 'SOGO_LDAP_BASE_DN') | default('ou=users,dc=acme,dc=com', true) }}";
         bindDN = "{{ lookup('env', 'SOGO_LDAP_BIND_DN') | default('uid=sogo,ou=users,dc=acme,dc=com', true) }}";
