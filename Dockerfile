@@ -17,6 +17,8 @@ ADD config/sogo.conf.j2 /etc/sogo/sogo.conf.j2
 ADD config/nginx.conf.j2 /etc/nginx/nginx.conf.j2
 # Add Nginx config template
 ADD config/auth_sogo.sql.j2 /tmp/auth_sogo.sql.j2
+# Add custom theme
+ADD config/custom-theme.js /usr/lib64/GNUstep/SOGo/WebServerResources/js/theme.js
 
 ADD root /
 

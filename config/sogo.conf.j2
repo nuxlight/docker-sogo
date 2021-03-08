@@ -18,7 +18,10 @@
     SOGoJunkFolderName = Junk;
     SOGoMailingMechanism = smtp;
     SOGoSMTPServer = "smtp://{{ lookup('env', 'SOGO_SMTP_HOST') | default('127.0.0.1', true) }}";
-    //SOGoUIAdditionalJSFiles = (js/theme.js);
+    SOGoUIAdditionalJSFiles = (
+      js/theme.js
+    );
+    SOGoUIxDebugEnabled = YES;
     {% if lookup('env', 'SOGO_DEBUG') | default(true, true) == "true" %}
     SOGoDebugRequests = YES;
     SOGoEASDebugEnabled = YES;
