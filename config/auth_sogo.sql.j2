@@ -1,0 +1,10 @@
+DROP TABLE IF EXISTS `sogo`.`sogo_users`;
+CREATE TABLE IF NOT EXISTS `sogo`.`sogo_users` (
+  `c_uid` varchar(128) NOT NULL,
+  `c_name` varchar(128) NOT NULL,
+  `c_password` varchar(128) NOT NULL,
+  `c_cn` varchar(128) NULL,
+  `mail` varchar(128) NOT NULL,
+  PRIMARY KEY (`c_uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT INTO `sogo`.`sogo_users` (`c_uid`, `c_name`, `c_password`, `c_cn`, `mail`) VALUES ('{{ lookup('env', 'SOGO_UID') | default('user', true) }}','{{ lookup('env', 'SOGO_USER_NAME') | default('user', true) }}','{{ lookup('env', 'SOGO_USER_PASSWORD') | default('userPasword', true) }}','{{ lookup('env', 'SOGO_USER_COM_NAME') | default('user', true) }}','{{ lookup('env', 'SOGO_USER_MAIL') | default('user@mail.com', true) }}');

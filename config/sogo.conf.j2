@@ -1,7 +1,7 @@
 {
-    SOGoProfileURL = "postgresql://sogo:sogo@{{ lookup('env', 'SOGO_POSTGRES_HOST') | default('127.0.0.1', true) }}:5432/sogo/sogo_user_profile";
-    OCSFolderInfoURL = "postgresql://sogo:sogo@{{ lookup('env', 'SOGO_POSTGRES_HOST') | default('127.0.0.1', true) }}:5432/sogo/sogo_folder_info";
-    OCSSessionsFolderURL = "postgresql://sogo:sogo@{{ lookup('env', 'SOGO_POSTGRES_HOST') | default('127.0.0.1', true) }}:5432/sogo/sogo_sessions_folder";
+    SOGoProfileURL = "mysql://sogo:sogo@{{ lookup('env', 'SOGO_MYSQL_HOST') | default('127.0.0.1', true) }}:3306/sogo/sogo_user_profile";
+    OCSFolderInfoURL = "mysql://sogo:sogo@{{ lookup('env', 'SOGO_MYSQL_HOST') | default('127.0.0.1', true) }}:3306/sogo/sogo_folder_info";
+    OCSSessionsFolderURL = "mysql://sogo:sogo@{{ lookup('env', 'SOGO_MYSQL_HOST') | default('127.0.0.1', true) }}:3306/sogo/sogo_sessions_folder";
     SOGoAppointmentSendEMailNotifications = {{ lookup('env', 'SOGO_MAILMODIFICATION') | default('YES', true) }};
     SOGoCalendarDefaultRoles = (
         PublicViewer,
@@ -19,22 +19,40 @@
     SOGoMailingMechanism = smtp;
     SOGoSMTPServer = "smtp://{{ lookup('env', 'SOGO_SMTP_HOST') | default('127.0.0.1', true) }}";
     //SOGoUIAdditionalJSFiles = (js/theme.js);
+    {% if lookup('env', 'SOGO_DEBUG') | default(true, true) == "true" %}
+    SOGoDebugRequests = YES;
+    SOGoEASDebugEnabled = YES;
+    ImapDebugEnabled = YES;
+    LDAPDebugEnabled = YES;
+    MySQL4DebugEnabled = YES;
+    PGDebugEnabled = YES;
+    {% endif %}
     SOGoUserSources = (
       {
-        type = ldap;
-        CNFieldName = cn;
-        IDFieldName = uid;
-        UIDFieldName = uid;
-        bindFields = (mail);
-        //IMAPHostFieldName = mailHost;
-        baseDN = "{{ lookup('env', 'SOGO_LDAP_BASE_DN') | default('ou=users,dc=acme,dc=com', true) }}";
-        bindDN = "{{ lookup('env', 'SOGO_LDAP_BIND_DN') | default('uid=sogo,ou=users,dc=acme,dc=com', true) }}";
-        bindPassword = {{ lookup('env', 'SOGO_LDAP_PASSWORD') | default('querty', true) }};
-        canAuthenticate = YES;
-        displayName = "Shared Addresses";
-        hostname = {{ lookup('env', 'SOGO_LDAP_HOST') | default('127.0.0.1', true) }};
-        id = public;
-        isAddressBook = YES;
+        {% if lookup('env', 'SOGO_LDAP_ON') | default(true, true) == "true" %}
+          type = ldap;
+          CNFieldName = cn;
+          IDFieldName = uid;
+          UIDFieldName = uid;
+          bindFields = (mail);
+          //IMAPHostFieldName = mailHost;
+          baseDN = "{{ lookup('env', 'SOGO_LDAP_BASE_DN') | default('ou=users,dc=acme,dc=com', true) }}";
+          bindDN = "{{ lookup('env', 'SOGO_LDAP_BIND_DN') | default('uid=sogo,ou=users,dc=acme,dc=com', true) }}";
+          bindPassword = {{ lookup('env', 'SOGO_LDAP_PASSWORD') | default('querty', true) }};
+          canAuthenticate = YES;
+          displayName = "Shared Addresses";
+          hostname = {{ lookup('env', 'SOGO_LDAP_HOST') | default('127.0.0.1', true) }};
+          id = public;
+          isAddressBook = YES;
+        {% else %}
+          type = sql;
+          id = users;
+          viewURL = "mysql://sogo:sogo@{{ lookup('env', 'SOGO_MYSQL_HOST') | default('127.0.0.1', true) }}:3306/sogo/sogo_users";
+          canAuthenticate = YES;
+          isAddressBook = YES;
+          userPasswordAlgorithm = none;
+          displayName = "Nuxlight Address Book";
+        {% endif %}
       }
     );
 }
